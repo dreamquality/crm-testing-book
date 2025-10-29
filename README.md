@@ -21,9 +21,15 @@ Each chapter represents a complete testing assignment with clear objectives, ins
 
 **Focus:** Comprehensive testing of a containerized Employee Management CRM application
 
+**Testing Guides:**
+- **[Manual Testing](./manual-testing.md)** - Test plan creation, execution, and bug reporting
+- **[API Automation](./api-automation.md)** - Automated API testing with Postman
+- **[UI Automation](./ui-automation.md)** - Automated UI testing with Cypress or Playwright
+
 **Skills Covered:**
 - Docker containerization and deployment
-- API testing with Postman
+- Manual testing and exploratory testing
+- API automation with Postman
 - UI automation with Cypress/Playwright
 - Test report documentation
 

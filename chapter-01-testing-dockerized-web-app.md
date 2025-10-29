@@ -6,8 +6,6 @@
 
 **Objective:** Demonstrate comprehensive testing skills including manual testing, API testing, and UI automation for a Dockerized web application.
 
-**Estimated Time:** 8-12 hours
-
 **Difficulty Level:** Intermediate
 
 ## 🎯 Goals
@@ -82,177 +80,54 @@ By completing this assignment, you will demonstrate your ability to:
 
 ---
 
-### Stage 2: API Testing
+### Stage 2: API Automation
 
-#### 2.1 Postman Collection Creation
+Automated API testing using Postman to verify the functionality and reliability of the Employee Management CRM REST API.
 
-**Tasks:**
-1. Create a new Postman collection named "Employee Management CRM API Tests"
+**📖 [Go to API Automation Guide →](./api-automation.md)**
 
-2. Implement API test cases for the following scenarios:
-
-   **Employee CRUD Operations:**
-   - **Create Employee** (POST)
-     - Test case: Create employee with valid data
-     - Test case: Create employee with invalid data (validation)
-     - Test case: Create employee with missing required fields
-   
-   - **Read Employee(s)** (GET)
-     - Test case: Get all employees
-     - Test case: Get single employee by ID
-     - Test case: Get non-existent employee (404 handling)
-   
-   - **Update Employee** (PUT/PATCH)
-     - Test case: Update employee with valid data
-     - Test case: Update employee with invalid data
-     - Test case: Update non-existent employee
-   
-   - **Delete Employee** (DELETE)
-     - Test case: Delete existing employee
-     - Test case: Delete non-existent employee
-     - Test case: Verify deletion (GET after DELETE)
-
-3. Add assertions for:
-   - HTTP status codes (200, 201, 400, 404, etc.)
-   - Response time (should be under reasonable threshold)
-   - Response body structure and data types
-   - Data validation and business rules
-
-4. Set up environment variables for:
-   - Base URL
-   - API endpoints
-   - Test data (employee IDs, etc.)
-
-**Deliverables:**
-- Postman collection (exported as JSON file)
-- Environment file with variables
-- Screenshot of test execution results
-- Summary of test coverage (number of tests, pass/fail rate)
-
-#### 2.2 API Test Coverage
-
-**Additional Test Scenarios:**
-- Authentication/Authorization tests (if applicable)
-- Search and filter functionality tests
-- Pagination tests (if applicable)
-- Boundary value tests (e.g., maximum field lengths)
-- Data persistence verification
-
-**Deliverables:**
-- Extended test cases documentation
-- Test execution results with pass/fail status
+**Key Topics Covered:**
+- Postman collection creation and configuration
+- Employee CRUD operations testing
+- Request/response validation and assertions
+- Environment variables and test data management
+- Running tests with Collection Runner and Newman
 
 ---
 
-### Stage 3: UI Testing
+### Stage 3: Manual Testing
 
-#### 3.1 Manual UI Testing
+Manual testing of the web application to identify usability issues and verify functionality from an end-user perspective.
 
-**Tasks:**
-1. Create a test plan covering:
-   - User registration/login (if applicable)
-   - Employee creation workflow
-   - Employee list viewing and filtering
-   - Employee details viewing
-   - Employee editing workflow
-   - Employee deletion workflow
-   - Form validation
-   - Error handling
-   - Navigation and usability
+**📖 [Go to Manual Testing Guide →](./manual-testing.md)**
 
-2. Execute manual test cases and document:
-   - Test case ID
-   - Test description
-   - Prerequisites
-   - Test steps
-   - Expected results
-   - Actual results
-   - Status (Pass/Fail)
-   - Screenshots of defects (if any)
-
-**Deliverables:**
-- Manual test cases document (Excel, Google Sheets, or Markdown table)
-- Test execution report
-- Bug reports (if defects found)
-- Screenshots demonstrating test execution
-
-#### 3.2 Automated UI Tests
-
-**Tasks:**
-
-Choose either **Cypress** or **Playwright** for automation.
-
-**Test Scenarios to Automate:**
-
-1. **Employee Creation Flow:**
-   ```
-   - Navigate to employee creation page
-   - Fill in all required fields
-   - Submit the form
-   - Verify success message
-   - Verify employee appears in the list
-   ```
-
-2. **Employee List Verification:**
-   ```
-   - Navigate to employees list
-   - Verify table/list is displayed
-   - Verify employee data is shown
-   - Verify pagination (if applicable)
-   ```
-
-3. **Employee Details View:**
-   ```
-   - Navigate to employee list
-   - Click on an employee
-   - Verify details page loads
-   - Verify all employee information is displayed
-   ```
-
-4. **Employee Update Flow:**
-   ```
-   - Navigate to an employee's edit page
-   - Modify employee information
-   - Save changes
-   - Verify success message
-   - Verify changes are reflected
-   ```
-
-5. **Employee Deletion Flow:**
-   ```
-   - Navigate to employee list
-   - Delete an employee
-   - Confirm deletion
-   - Verify employee is removed from list
-   ```
-
-6. **Form Validation Tests:**
-   ```
-   - Try to submit empty form
-   - Try to submit with invalid email
-   - Try to submit with invalid phone number
-   - Verify validation error messages
-   ```
-
-**Best Practices to Follow:**
-- Use Page Object Model (POM) pattern
-- Implement proper waits and assertions
-- Use test data fixtures
-- Implement proper test cleanup (delete created test data)
-- Add meaningful test descriptions
-- Handle dynamic elements properly
-
-**Deliverables:**
-- Automated test code (pushed to a Git repository)
-- README with instructions to run the tests
-- Test execution report/screenshots
-- Video recording of test execution (optional but recommended)
+**Key Topics Covered:**
+- Test plan creation and execution
+- Employee workflow testing (create, read, update, delete)
+- Form validation and error handling
+- Bug reporting and documentation
+- Test execution templates
 
 ---
 
-### Stage 4: Report Preparation
+### Stage 4: UI Automation
 
-#### 4.1 Test Documentation
+Automated UI testing using Cypress or Playwright to ensure the web interface works correctly across different scenarios.
+
+**📖 [Go to UI Automation Guide →](./ui-automation.md)**
+
+**Key Topics Covered:**
+- Cypress or Playwright setup
+- Employee workflow automation
+- Page Object Model implementation
+- Test data fixtures and cleanup
+- Best practices for stable UI tests
+
+---
+
+### Stage 5: Report Preparation
+
+#### 5.1 Test Documentation
 
 **Tasks:**
 1. Create a comprehensive Test Report including:
