@@ -35,56 +35,30 @@ Before starting UI automation:
 
 ### Cypress Setup
 
-```bash
-# Create a new project directory
-mkdir employee-crm-ui-tests
-cd employee-crm-ui-tests
+1. Create a new project directory for your tests
+2. Initialize npm project
+3. Install Cypress as a dev dependency
+4. Open Cypress to generate initial folder structure
+5. Configure Cypress settings in config file
 
-# Initialize npm project
-npm init -y
-
-# Install Cypress
-npm install --save-dev cypress
-
-# Open Cypress for first time
-npx cypress open
-```
-
-Project structure:
-```
-employee-crm-ui-tests/
-├── cypress/
-│   ├── e2e/
-│   │   └── employee.cy.js
-│   ├── fixtures/
-│   │   └── employees.json
-│   ├── support/
-│   │   ├── commands.js
-│   │   └── e2e.js
-│   └── pages/
-│       └── EmployeePage.js
-├── cypress.config.js
-└── package.json
-```
+**Project Structure:**
+- `cypress/e2e/` - Test files
+- `cypress/fixtures/` - Test data files
+- `cypress/support/` - Custom commands and setup
+- `cypress.config.js` - Configuration file
 
 ### Playwright Setup
 
-```bash
-# Create a new project directory
-mkdir employee-crm-ui-tests
-cd employee-crm-ui-tests
+1. Create a new project directory
+2. Initialize npm project
+3. Run Playwright initialization wizard
+4. Configure browser settings
+5. Set up test directory structure
 
-# Initialize npm project
-npm init -y
-
-# Install Playwright
-npm init playwright@latest
-
-# This will create:
-# - playwright.config.js
-# - tests/ directory
-# - package.json with dependencies
-```
+**Project Structure:**
+- `tests/` - Test files
+- `playwright.config.js` - Configuration file
+- Test runner and reporters configured
 
 ---
 
@@ -94,72 +68,19 @@ npm init playwright@latest
 
 **Objective:** Verify that a new employee can be created through the UI
 
-#### Cypress Implementation
+**Test Steps:**
+1. Navigate to the application homepage
+2. Click on "Add Employee" button
+3. Fill in all required fields (name, email, phone, department, position)
+4. Submit the form
+5. Verify success message is displayed
+6. Navigate to employee list
+7. Verify new employee appears in the list
 
-```javascript
-// cypress/e2e/employee-creation.cy.js
-describe('Employee Creation', () => {
-  beforeEach(() => {
-    cy.visit('http://localhost:3000');
-  });
-
-  it('should create a new employee with valid data', () => {
-    // Navigate to create employee page
-    cy.contains('Add Employee').click();
-    
-    // Fill in the form
-    cy.get('[data-testid="name-input"]').type('John Doe');
-    cy.get('[data-testid="email-input"]').type('john.doe@example.com');
-    cy.get('[data-testid="phone-input"]').type('+1234567890');
-    cy.get('[data-testid="department-select"]').select('Engineering');
-    cy.get('[data-testid="position-input"]').type('Software Engineer');
-    
-    // Submit the form
-    cy.get('[data-testid="submit-button"]').click();
-    
-    // Verify success message
-    cy.contains('Employee created successfully').should('be.visible');
-    
-    // Verify employee appears in the list
-    cy.visit('http://localhost:3000/employees');
-    cy.contains('John Doe').should('be.visible');
-  });
-});
-```
-
-#### Playwright Implementation
-
-```javascript
-// tests/employee-creation.spec.js
-import { test, expect } from '@playwright/test';
-
-test.describe('Employee Creation', () => {
-  test('should create a new employee with valid data', async ({ page }) => {
-    // Navigate to the application
-    await page.goto('http://localhost:3000');
-    
-    // Navigate to create employee page
-    await page.click('text=Add Employee');
-    
-    // Fill in the form
-    await page.fill('[data-testid="name-input"]', 'John Doe');
-    await page.fill('[data-testid="email-input"]', 'john.doe@example.com');
-    await page.fill('[data-testid="phone-input"]', '+1234567890');
-    await page.selectOption('[data-testid="department-select"]', 'Engineering');
-    await page.fill('[data-testid="position-input"]', 'Software Engineer');
-    
-    // Submit the form
-    await page.click('[data-testid="submit-button"]');
-    
-    // Verify success message
-    await expect(page.locator('text=Employee created successfully')).toBeVisible();
-    
-    // Verify employee appears in the list
-    await page.goto('http://localhost:3000/employees');
-    await expect(page.locator('text=John Doe')).toBeVisible();
-  });
-});
-```
+**Assertions to Include:**
+- Form fields accept valid input
+- Success message contains expected text
+- New employee is visible in the list with correct information
 
 ---
 
@@ -167,52 +88,17 @@ test.describe('Employee Creation', () => {
 
 **Objective:** Verify that the employee list displays correctly
 
-#### Cypress Implementation
+**Test Steps:**
+1. Navigate to employees list page
+2. Verify table/list element is displayed
+3. Check table headers are present
+4. Verify at least one employee row exists
+5. Check pagination controls (if applicable)
 
-```javascript
-describe('Employee List', () => {
-  it('should display employee list correctly', () => {
-    cy.visit('http://localhost:3000/employees');
-    
-    // Verify table/list is displayed
-    cy.get('[data-testid="employee-table"]').should('be.visible');
-    
-    // Verify table headers
-    cy.contains('Name').should('be.visible');
-    cy.contains('Email').should('be.visible');
-    cy.contains('Department').should('be.visible');
-    
-    // Verify employee data is shown
-    cy.get('[data-testid="employee-row"]').should('have.length.at.least', 1);
-    
-    // Verify pagination (if applicable)
-    cy.get('[data-testid="pagination"]').should('be.visible');
-  });
-});
-```
-
-#### Playwright Implementation
-
-```javascript
-test('should display employee list correctly', async ({ page }) => {
-  await page.goto('http://localhost:3000/employees');
-  
-  // Verify table/list is displayed
-  await expect(page.locator('[data-testid="employee-table"]')).toBeVisible();
-  
-  // Verify table headers
-  await expect(page.locator('text=Name')).toBeVisible();
-  await expect(page.locator('text=Email')).toBeVisible();
-  await expect(page.locator('text=Department')).toBeVisible();
-  
-  // Verify employee data is shown
-  const rows = await page.locator('[data-testid="employee-row"]').count();
-  expect(rows).toBeGreaterThanOrEqual(1);
-  
-  // Verify pagination (if applicable)
-  await expect(page.locator('[data-testid="pagination"]')).toBeVisible();
-});
-```
+**Assertions to Include:**
+- Table headers match expected columns (Name, Email, Department, etc.)
+- Employee data is displayed correctly
+- Pagination works properly
 
 ---
 
@@ -220,47 +106,16 @@ test('should display employee list correctly', async ({ page }) => {
 
 **Objective:** Verify that employee details can be viewed
 
-#### Cypress Implementation
+**Test Steps:**
+1. Navigate to employee list
+2. Click on a specific employee
+3. Verify details page loads
+4. Check all employee information is displayed
 
-```javascript
-describe('Employee Details', () => {
-  it('should display employee details', () => {
-    cy.visit('http://localhost:3000/employees');
-    
-    // Click on first employee
-    cy.get('[data-testid="employee-row"]').first().click();
-    
-    // Verify details page loads
-    cy.url().should('include', '/employee/');
-    
-    // Verify employee information is displayed
-    cy.get('[data-testid="employee-name"]').should('be.visible');
-    cy.get('[data-testid="employee-email"]').should('be.visible');
-    cy.get('[data-testid="employee-phone"]').should('be.visible');
-    cy.get('[data-testid="employee-department"]').should('be.visible');
-  });
-});
-```
-
-#### Playwright Implementation
-
-```javascript
-test('should display employee details', async ({ page }) => {
-  await page.goto('http://localhost:3000/employees');
-  
-  // Click on first employee
-  await page.locator('[data-testid="employee-row"]').first().click();
-  
-  // Verify details page loads
-  await expect(page).toHaveURL(/\/employee\//);
-  
-  // Verify employee information is displayed
-  await expect(page.locator('[data-testid="employee-name"]')).toBeVisible();
-  await expect(page.locator('[data-testid="employee-email"]')).toBeVisible();
-  await expect(page.locator('[data-testid="employee-phone"]')).toBeVisible();
-  await expect(page.locator('[data-testid="employee-department"]')).toBeVisible();
-});
-```
+**Assertions to Include:**
+- URL changes to employee detail page
+- All employee fields are visible and contain data
+- Back/navigation buttons work correctly
 
 ---
 
@@ -268,63 +123,20 @@ test('should display employee details', async ({ page }) => {
 
 **Objective:** Verify that an employee's information can be updated
 
-#### Cypress Implementation
+**Test Steps:**
+1. Navigate to employee list
+2. Click on an employee to view details
+3. Click edit button
+4. Modify one or more fields (e.g., phone number, department)
+5. Save changes
+6. Verify success message
+7. Confirm changes are reflected in employee details
 
-```javascript
-describe('Employee Update', () => {
-  it('should update employee information', () => {
-    cy.visit('http://localhost:3000/employees');
-    
-    // Click on first employee
-    cy.get('[data-testid="employee-row"]').first().click();
-    
-    // Click edit button
-    cy.get('[data-testid="edit-button"]').click();
-    
-    // Modify employee information
-    cy.get('[data-testid="phone-input"]').clear().type('+9876543210');
-    cy.get('[data-testid="department-select"]').select('Management');
-    
-    // Save changes
-    cy.get('[data-testid="save-button"]').click();
-    
-    // Verify success message
-    cy.contains('Employee updated successfully').should('be.visible');
-    
-    // Verify changes are reflected
-    cy.get('[data-testid="employee-phone"]').should('contain', '+9876543210');
-    cy.get('[data-testid="employee-department"]').should('contain', 'Management');
-  });
-});
-```
-
-#### Playwright Implementation
-
-```javascript
-test('should update employee information', async ({ page }) => {
-  await page.goto('http://localhost:3000/employees');
-  
-  // Click on first employee
-  await page.locator('[data-testid="employee-row"]').first().click();
-  
-  // Click edit button
-  await page.click('[data-testid="edit-button"]');
-  
-  // Modify employee information
-  await page.fill('[data-testid="phone-input"]', '+9876543210');
-  await page.selectOption('[data-testid="department-select"]', 'Management');
-  
-  // Save changes
-  await page.click('[data-testid="save-button"]');
-  
-  // Verify success message
-  await expect(page.locator('text=Employee updated successfully')).toBeVisible();
-  
-  // Verify changes are reflected
-  await expect(page.locator('[data-testid="employee-phone"]')).toContainText('+9876543210');
-  await expect(page.locator('[data-testid="employee-department"]')).toContainText('Management');
-});
-```
+**Assertions to Include:**
+- Edit form pre-populates with current data
+- Form validation works for updated fields
+- Success message appears after save
+- Updated data persists and displays correctly
 
 ---
 
@@ -332,66 +144,18 @@ test('should update employee information', async ({ page }) => {
 
 **Objective:** Verify that an employee can be deleted
 
-#### Cypress Implementation
+**Test Steps:**
+1. Navigate to employee list
+2. Select an employee to delete
+3. Click delete button
+4. Confirm deletion in confirmation dialog
+5. Verify success message
+6. Confirm employee is no longer in the list
 
-```javascript
-describe('Employee Deletion', () => {
-  it('should delete an employee', () => {
-    cy.visit('http://localhost:3000/employees');
-    
-    // Get the name of the first employee
-    cy.get('[data-testid="employee-row"]').first()
-      .find('[data-testid="employee-name"]')
-      .invoke('text')
-      .as('employeeName');
-    
-    // Click delete button
-    cy.get('[data-testid="employee-row"]').first()
-      .find('[data-testid="delete-button"]')
-      .click();
-    
-    // Confirm deletion in modal
-    cy.get('[data-testid="confirm-delete"]').click();
-    
-    // Verify success message
-    cy.contains('Employee deleted successfully').should('be.visible');
-    
-    // Verify employee is removed from list
-    cy.get('@employeeName').then((name) => {
-      cy.contains(name).should('not.exist');
-    });
-  });
-});
-```
-
-#### Playwright Implementation
-
-```javascript
-test('should delete an employee', async ({ page }) => {
-  await page.goto('http://localhost:3000/employees');
-  
-  // Get the name of the first employee
-  const employeeName = await page.locator('[data-testid="employee-row"]')
-    .first()
-    .locator('[data-testid="employee-name"]')
-    .textContent();
-  
-  // Click delete button
-  await page.locator('[data-testid="employee-row"]')
-    .first()
-    .locator('[data-testid="delete-button"]')
-    .click();
-  
-  // Confirm deletion in modal
-  await page.click('[data-testid="confirm-delete"]');
-  
-  // Verify success message
-  await expect(page.locator('text=Employee deleted successfully')).toBeVisible();
-  
-  // Verify employee is removed from list
-  await expect(page.locator(`text=${employeeName}`)).not.toBeVisible();
-});
-```
+**Assertions to Include:**
+- Confirmation dialog appears before deletion
+- Success message confirms deletion
+- Deleted employee does not appear in search results
 
 ---
 
@@ -399,262 +163,152 @@ test('should delete an employee', async ({ page }) => {
 
 **Objective:** Verify that form validation works correctly
 
-#### Cypress Implementation
+**Test Scenarios:**
 
-```javascript
-describe('Form Validation', () => {
-  beforeEach(() => {
-    cy.visit('http://localhost:3000');
-    cy.contains('Add Employee').click();
-  });
+**a) Empty Form Submission**
+- Navigate to employee creation page
+- Click submit without filling fields
+- Verify validation error messages appear for required fields
 
-  it('should show error for empty form submission', () => {
-    cy.get('[data-testid="submit-button"]').click();
-    
-    cy.contains('Name is required').should('be.visible');
-    cy.contains('Email is required').should('be.visible');
-  });
+**b) Invalid Email Format**
+- Enter invalid email format (e.g., "notanemail")
+- Attempt to submit form
+- Verify email validation error appears
 
-  it('should show error for invalid email', () => {
-    cy.get('[data-testid="name-input"]').type('John Doe');
-    cy.get('[data-testid="email-input"]').type('notanemail');
-    cy.get('[data-testid="submit-button"]').click();
-    
-    cy.contains('Invalid email format').should('be.visible');
-  });
+**c) Invalid Phone Number**
+- Enter invalid phone number format
+- Attempt to submit form
+- Verify phone validation error appears
 
-  it('should show error for invalid phone number', () => {
-    cy.get('[data-testid="name-input"]').type('John Doe');
-    cy.get('[data-testid="email-input"]').type('john@example.com');
-    cy.get('[data-testid="phone-input"]').type('123');
-    cy.get('[data-testid="submit-button"]').click();
-    
-    cy.contains('Invalid phone number').should('be.visible');
-  });
-});
-```
-
-#### Playwright Implementation
-
-```javascript
-test.describe('Form Validation', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000');
-    await page.click('text=Add Employee');
-  });
-
-  test('should show error for empty form submission', async ({ page }) => {
-    await page.click('[data-testid="submit-button"]');
-    
-    await expect(page.locator('text=Name is required')).toBeVisible();
-    await expect(page.locator('text=Email is required')).toBeVisible();
-  });
-
-  test('should show error for invalid email', async ({ page }) => {
-    await page.fill('[data-testid="name-input"]', 'John Doe');
-    await page.fill('[data-testid="email-input"]', 'notanemail');
-    await page.click('[data-testid="submit-button"]');
-    
-    await expect(page.locator('text=Invalid email format')).toBeVisible();
-  });
-
-  test('should show error for invalid phone number', async ({ page }) => {
-    await page.fill('[data-testid="name-input"]', 'John Doe');
-    await page.fill('[data-testid="email-input"]', 'john@example.com');
-    await page.fill('[data-testid="phone-input"]', '123');
-    await page.click('[data-testid="submit-button"]');
-    
-    await expect(page.locator('text=Invalid phone number')).toBeVisible();
-  });
-});
-```
+**Assertions to Include:**
+- Error messages are displayed for each invalid field
+- Form cannot be submitted with validation errors
+- Error messages are clear and helpful
 
 ---
 
 ## Implementing Page Object Model (POM)
 
-### Cypress Page Object Example
+### What is Page Object Model?
 
-```javascript
-// cypress/pages/EmployeePage.js
-export class EmployeePage {
-  // Selectors
-  addEmployeeButton = 'text=Add Employee';
-  nameInput = '[data-testid="name-input"]';
-  emailInput = '[data-testid="email-input"]';
-  phoneInput = '[data-testid="phone-input"]';
-  departmentSelect = '[data-testid="department-select"]';
-  submitButton = '[data-testid="submit-button"]';
-  successMessage = 'text=Employee created successfully';
+Page Object Model is a design pattern that:
+- Creates an object repository for UI elements
+- Separates test logic from page-specific code
+- Improves test maintainability
+- Reduces code duplication
 
-  // Methods
-  visit() {
-    cy.visit('http://localhost:3000');
-  }
+### Structure
 
-  clickAddEmployee() {
-    cy.contains(this.addEmployeeButton).click();
-  }
+**Page Objects should contain:**
+- Element locators (selectors for UI elements)
+- Methods to interact with page elements
+- Methods to perform common page actions
+- No test assertions (those belong in test files)
 
-  fillEmployeeForm(employee) {
-    cy.get(this.nameInput).type(employee.name);
-    cy.get(this.emailInput).type(employee.email);
-    cy.get(this.phoneInput).type(employee.phone);
-    cy.get(this.departmentSelect).select(employee.department);
-  }
+**Example Structure:**
+- `pages/EmployeePage.js` - Employee list page object
+- `pages/EmployeeFormPage.js` - Employee form page object
+- `pages/EmployeeDetailPage.js` - Employee detail page object
 
-  submitForm() {
-    cy.get(this.submitButton).click();
-  }
-
-  verifySuccess() {
-    cy.contains(this.successMessage).should('be.visible');
-  }
-}
-
-// Usage in test
-import { EmployeePage } from '../pages/EmployeePage';
-
-describe('Employee Creation with POM', () => {
-  const employeePage = new EmployeePage();
-  
-  it('should create employee using page object', () => {
-    employeePage.visit();
-    employeePage.clickAddEmployee();
-    employeePage.fillEmployeeForm({
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: '+1234567890',
-      department: 'Engineering'
-    });
-    employeePage.submitForm();
-    employeePage.verifySuccess();
-  });
-});
-```
-
-### Playwright Page Object Example
-
-```javascript
-// pages/EmployeePage.js
-export class EmployeePage {
-  constructor(page) {
-    this.page = page;
-    this.addEmployeeButton = page.locator('text=Add Employee');
-    this.nameInput = page.locator('[data-testid="name-input"]');
-    this.emailInput = page.locator('[data-testid="email-input"]');
-    this.phoneInput = page.locator('[data-testid="phone-input"]');
-    this.departmentSelect = page.locator('[data-testid="department-select"]');
-    this.submitButton = page.locator('[data-testid="submit-button"]');
-    this.successMessage = page.locator('text=Employee created successfully');
-  }
-
-  async goto() {
-    await this.page.goto('http://localhost:3000');
-  }
-
-  async clickAddEmployee() {
-    await this.addEmployeeButton.click();
-  }
-
-  async fillEmployeeForm(employee) {
-    await this.nameInput.fill(employee.name);
-    await this.emailInput.fill(employee.email);
-    await this.phoneInput.fill(employee.phone);
-    await this.departmentSelect.selectOption(employee.department);
-  }
-
-  async submitForm() {
-    await this.submitButton.click();
-  }
-
-  async verifySuccess() {
-    await expect(this.successMessage).toBeVisible();
-  }
-}
-
-// Usage in test
-import { test } from '@playwright/test';
-import { EmployeePage } from '../pages/EmployeePage';
-
-test('should create employee using page object', async ({ page }) => {
-  const employeePage = new EmployeePage(page);
-  
-  await employeePage.goto();
-  await employeePage.clickAddEmployee();
-  await employeePage.fillEmployeeForm({
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '+1234567890',
-    department: 'Engineering'
-  });
-  await employeePage.submitForm();
-  await employeePage.verifySuccess();
-});
-```
+**Test files should:**
+- Import and use page objects
+- Contain test assertions
+- Focus on test logic, not element locations
 
 ---
 
 ## Test Data Management
 
-### Using Fixtures (Cypress)
+### Using Fixtures
 
-```javascript
-// cypress/fixtures/employees.json
-{
-  "validEmployee": {
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "phone": "+1234567890",
-    "department": "Engineering",
-    "position": "Software Engineer"
-  },
-  "invalidEmployee": {
-    "name": "",
-    "email": "invalid-email",
-    "phone": "123"
-  }
-}
+**Benefits:**
+- Centralized test data
+- Reusable across tests
+- Easy to maintain
+- Supports multiple data sets
 
-// Usage in test
-describe('Employee Tests with Fixtures', () => {
-  it('should create employee using fixture data', () => {
-    cy.fixture('employees').then((data) => {
-      const employee = data.validEmployee;
-      // Use employee data in test
-    });
-  });
-});
-```
+**Test Data to Include:**
+- Valid employee data (complete profiles)
+- Invalid data (for negative testing)
+- Edge cases (boundary values)
+- Special characters and unicode
+
+### Data Generation
+
+**Strategies:**
+- Generate unique data for each test run (timestamps, UUIDs)
+- Use faker libraries for realistic data
+- Maintain test data separately from test logic
 
 ---
 
 ## Test Cleanup
 
-### Cypress Example
+### Why Test Cleanup Matters
 
-```javascript
-describe('Employee Tests with Cleanup', () => {
-  let createdEmployeeId;
+- Prevents test data accumulation
+- Ensures tests can run repeatedly
+- Maintains test independence
+- Prevents false failures
 
-  afterEach(() => {
-    // Clean up created test data
-    if (createdEmployeeId) {
-      cy.request('DELETE', `http://localhost:3000/api/employees/${createdEmployeeId}`);
-    }
-  });
+### Cleanup Strategies
 
-  it('should create employee', () => {
-    // Create employee and store ID
-    cy.request('POST', 'http://localhost:3000/api/employees', {
-      name: 'Test Employee',
-      email: 'test@example.com'
-    }).then((response) => {
-      createdEmployeeId = response.body.id;
-    });
-  });
-});
-```
+**After Each Test:**
+- Delete created test data
+- Reset application state if needed
+- Clear browser storage/cookies
+
+**Using Hooks:**
+- `beforeEach` - Set up test data
+- `afterEach` - Clean up test data
+- `before` - One-time setup
+- `after` - One-time cleanup
+
+---
+
+## Best Practices
+
+### Selectors
+- Use `data-testid` attributes for stable selectors
+- Avoid CSS classes that might change frequently
+- Use semantic HTML elements when possible
+- Create reusable selector constants
+
+### Waits and Timing
+- Use framework's built-in waiting mechanisms
+- Avoid fixed waits (sleep/hardcoded delays)
+- Wait for specific conditions (visibility, text content, enabled state)
+- Set appropriate timeouts for slow operations
+
+### Test Organization
+- One test file per feature or page
+- Use descriptive test names that explain what is being tested
+- Group related tests using describe blocks
+- Keep tests independent of each other
+
+### Test Data
+- Use fixtures for complex or repeated test data
+- Generate unique data to avoid conflicts
+- Clean up test data after execution
+- Separate test data from test logic
+
+### Error Handling
+- Use clear, descriptive assertions
+- Add meaningful error messages
+- Take screenshots on failure automatically
+- Log relevant information for debugging
+
+---
+
+## Tips for Effective UI Automation
+
+1. **Start Small:** Begin with critical user journeys, add more tests incrementally
+2. **Keep Tests Fast:** Optimize test execution time, run tests in parallel when possible
+3. **Make Tests Reliable:** Eliminate flakiness through proper waits and selectors
+4. **Use Debugging Tools:** Leverage browser dev tools and framework debugging features
+5. **Run Tests Locally:** Validate tests work before committing
+6. **CI/CD Integration:** Set up continuous integration to run tests automatically
+7. **Maintain Tests:** Update tests when UI changes, refactor regularly
 
 ---
 
@@ -663,7 +317,7 @@ describe('Employee Tests with Cleanup', () => {
 Submit the following for UI automation:
 
 1. **Automated Test Code**
-   - Complete test suite with all scenarios
+   - Complete test suite covering all scenarios
    - Page Object Model implementation
    - Test data fixtures
    - Configuration files
@@ -681,54 +335,38 @@ Submit the following for UI automation:
    - Any identified issues
 
 4. **Video Recording (Optional)**
-   - Video of test execution
-   - Demonstration of key test scenarios
+   - Video demonstrating test execution
+   - Showing key test scenarios
 
 ---
 
-## Best Practices
+## Running Tests
 
-### Selectors
-- Use `data-testid` attributes for stable selectors
-- Avoid using CSS classes that might change
-- Use semantic HTML elements when possible
-- Create reusable selector constants
+### Local Execution
 
-### Waits and Timing
-- Use built-in waits (Cypress automatic waiting, Playwright auto-waiting)
-- Avoid fixed waits (sleep/wait)
-- Wait for specific conditions (visibility, text content)
-- Set appropriate timeouts for slow operations
+**Cypress:**
+- Open Cypress Test Runner for interactive mode
+- Run tests in headless mode for CI/CD
+- Generate reports and screenshots
 
-### Test Organization
-- One test file per feature or page
-- Use descriptive test names
-- Group related tests with describe/test.describe
-- Keep tests independent and idempotent
+**Playwright:**
+- Run tests in headed or headless mode
+- Execute tests across multiple browsers
+- Generate HTML reports with traces
 
-### Test Data
-- Use fixtures for complex test data
-- Generate unique data for each test run
-- Clean up test data after execution
-- Separate test data from test logic
+### CI/CD Integration
 
-### Error Handling
-- Use proper assertions
-- Add meaningful error messages
-- Take screenshots on failure
-- Log relevant information for debugging
+**Benefits:**
+- Automated test execution on code changes
+- Early detection of issues
+- Consistent test environment
+- Automatic report generation
 
----
-
-## Tips for Effective UI Automation
-
-1. **Start Small:** Begin with critical user journeys
-2. **Keep Tests Fast:** Optimize test execution time
-3. **Make Tests Reliable:** Eliminate flakiness
-4. **Use Debugging Tools:** Leverage browser dev tools and framework debuggers
-5. **Run Tests Locally:** Validate before committing
-6. **CI/CD Integration:** Run tests in pipelines
-7. **Maintain Tests:** Update tests when UI changes
+**Setup Steps:**
+1. Configure test scripts in package.json
+2. Set up CI/CD pipeline (GitHub Actions, Jenkins, etc.)
+3. Configure test execution triggers
+4. Set up report publishing
 
 ---
 
@@ -736,8 +374,8 @@ Submit the following for UI automation:
 
 Your UI automation will be evaluated on:
 
-- **Code Quality (30%):** Clean, maintainable, follows best practices
-- **Test Coverage (25%):** Comprehensive scenario coverage
+- **Code Quality (30%):** Clean, maintainable code following best practices
+- **Test Coverage (25%):** Comprehensive coverage of important scenarios
 - **Page Object Model (20%):** Proper implementation and usage
 - **Test Stability (15%):** Tests run reliably without flakiness
 - **Documentation (10%):** Clear instructions and comments
@@ -754,7 +392,7 @@ Your UI automation will be evaluated on:
 ### Playwright Resources
 - [Playwright Documentation](https://playwright.dev/)
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
-- [Playwright Examples](https://playwright.dev/docs/examples)
+- [Playwright API Reference](https://playwright.dev/docs/api/class-playwright)
 
 ### General Resources
 - [Page Object Model Pattern](https://martinfowler.com/bliki/PageObject.html)

@@ -2,7 +2,7 @@
 
 ## Overview
 
-API automation testing is essential for verifying the functionality, reliability, and performance of backend services. This section covers automated testing of the Employee Management CRM REST API using Postman.
+API automation testing is essential for verifying the functionality, reliability, and performance of backend services. This section covers automated testing of the Employee Management CRM REST API using Postman or similar tools.
 
 ## Prerequisites
 
@@ -28,16 +28,10 @@ Before starting API automation:
 
 #### Set Up Environment Variables
 
-Create a new environment with the following variables:
-
-```javascript
-{
-  "baseUrl": "http://localhost:3000/api",
-  "employeeId": "",
-  "testEmployeeEmail": "test@example.com",
-  "testEmployeeName": "Test Employee"
-}
-```
+Create a new environment with variables for:
+- Base URL (e.g., `http://localhost:3000/api`)
+- Employee ID (for storing created test data)
+- Test employee data (email, name, etc.)
 
 ---
 
@@ -45,322 +39,96 @@ Create a new environment with the following variables:
 
 #### 2.1 Create Employee (POST)
 
-**Endpoint:** `{{baseUrl}}/employees`  
-**Method:** POST
+**Test Scenarios:**
 
-**Test Case 1: Create Employee with Valid Data**
+1. **Create Employee with Valid Data**
+   - Endpoint: `/employees` (POST)
+   - Test status code is 201 (Created)
+   - Verify response contains employee ID
+   - Validate response contains correct employee data
+   - Check response time is acceptable (under 500ms)
+   - Store employee ID in environment variable for later use
 
-Request Body:
-```json
-{
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "phone": "+1234567890",
-  "department": "Engineering",
-  "position": "Software Engineer",
-  "salary": 75000
-}
-```
+2. **Create Employee with Invalid Data**
+   - Test with empty required fields
+   - Test with invalid email format
+   - Test with invalid phone format
+   - Verify status code is 400 (Bad Request)
+   - Verify error message indicates validation failure
 
-Postman Tests:
-```javascript
-pm.test("Status code is 201", function () {
-    pm.response.to.have.status(201);
-});
-
-pm.test("Response has employee ID", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('id');
-    pm.environment.set("employeeId", jsonData.id);
-});
-
-pm.test("Response contains correct employee data", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData.name).to.eql("John Doe");
-    pm.expect(jsonData.email).to.eql("john.doe@example.com");
-});
-
-pm.test("Response time is less than 500ms", function () {
-    pm.expect(pm.response.responseTime).to.be.below(500);
-});
-```
-
----
-
-**Test Case 2: Create Employee with Invalid Data**
-
-Request Body:
-```json
-{
-  "name": "",
-  "email": "invalid-email",
-  "phone": "123"
-}
-```
-
-Postman Tests:
-```javascript
-pm.test("Status code is 400", function () {
-    pm.response.to.have.status(400);
-});
-
-pm.test("Error message indicates validation failure", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-    pm.expect(jsonData.error).to.include('validation');
-});
-```
-
----
-
-**Test Case 3: Create Employee with Missing Required Fields**
-
-Request Body:
-```json
-{
-  "email": "test@example.com"
-}
-```
-
-Postman Tests:
-```javascript
-pm.test("Status code is 400", function () {
-    pm.response.to.have.status(400);
-});
-
-pm.test("Error indicates missing required fields", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-});
-```
+3. **Create Employee with Missing Required Fields**
+   - Submit request without required fields
+   - Verify status code is 400
+   - Verify error indicates missing fields
 
 ---
 
 #### 2.2 Read Employee(s) (GET)
 
-**Test Case 1: Get All Employees**
+**Test Scenarios:**
 
-**Endpoint:** `{{baseUrl}}/employees`  
-**Method:** GET
+1. **Get All Employees**
+   - Endpoint: `/employees` (GET)
+   - Verify status code is 200
+   - Verify response is an array
+   - Check each employee has required properties (id, name, email)
+   - Verify response time is acceptable
 
-Postman Tests:
-```javascript
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
+2. **Get Single Employee by ID**
+   - Endpoint: `/employees/{id}` (GET)
+   - Use stored employee ID from previous test
+   - Verify status code is 200
+   - Verify response contains complete employee details
+   - Validate employee ID matches requested ID
 
-pm.test("Response is an array", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.be.an('array');
-});
-
-pm.test("Each employee has required properties", function () {
-    var jsonData = pm.response.json();
-    if (jsonData.length > 0) {
-        pm.expect(jsonData[0]).to.have.property('id');
-        pm.expect(jsonData[0]).to.have.property('name');
-        pm.expect(jsonData[0]).to.have.property('email');
-    }
-});
-
-pm.test("Response time is less than 1000ms", function () {
-    pm.expect(pm.response.responseTime).to.be.below(1000);
-});
-```
-
----
-
-**Test Case 2: Get Single Employee by ID**
-
-**Endpoint:** `{{baseUrl}}/employees/{{employeeId}}`  
-**Method:** GET
-
-Postman Tests:
-```javascript
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
-
-pm.test("Response contains employee details", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('id');
-    pm.expect(jsonData).to.have.property('name');
-    pm.expect(jsonData).to.have.property('email');
-});
-
-pm.test("Employee ID matches requested ID", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData.id).to.eql(pm.environment.get("employeeId"));
-});
-```
-
----
-
-**Test Case 3: Get Non-Existent Employee**
-
-**Endpoint:** `{{baseUrl}}/employees/99999`  
-**Method:** GET
-
-Postman Tests:
-```javascript
-pm.test("Status code is 404", function () {
-    pm.response.to.have.status(404);
-});
-
-pm.test("Error message indicates not found", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-    pm.expect(jsonData.error).to.include('not found');
-});
-```
+3. **Get Non-Existent Employee**
+   - Use invalid/non-existent employee ID
+   - Verify status code is 404 (Not Found)
+   - Verify error message indicates employee not found
 
 ---
 
 #### 2.3 Update Employee (PUT/PATCH)
 
-**Test Case 1: Update Employee with Valid Data**
+**Test Scenarios:**
 
-**Endpoint:** `{{baseUrl}}/employees/{{employeeId}}`  
-**Method:** PUT or PATCH
+1. **Update Employee with Valid Data**
+   - Endpoint: `/employees/{id}` (PUT or PATCH)
+   - Modify one or more employee fields
+   - Verify status code is 200
+   - Verify updated data is returned in response
+   - Validate changes are persisted
 
-Request Body:
-```json
-{
-  "name": "John Doe Updated",
-  "phone": "+9876543210",
-  "department": "Management"
-}
-```
+2. **Update Employee with Invalid Data**
+   - Submit invalid email or phone format
+   - Verify status code is 400
+   - Verify validation error is returned
 
-Postman Tests:
-```javascript
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
-
-pm.test("Employee data is updated", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData.name).to.eql("John Doe Updated");
-    pm.expect(jsonData.phone).to.eql("+9876543210");
-});
-
-pm.test("Response time is acceptable", function () {
-    pm.expect(pm.response.responseTime).to.be.below(500);
-});
-```
-
----
-
-**Test Case 2: Update Employee with Invalid Data**
-
-**Endpoint:** `{{baseUrl}}/employees/{{employeeId}}`  
-**Method:** PUT or PATCH
-
-Request Body:
-```json
-{
-  "email": "invalid-email-format"
-}
-```
-
-Postman Tests:
-```javascript
-pm.test("Status code is 400", function () {
-    pm.response.to.have.status(400);
-});
-
-pm.test("Validation error is returned", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-});
-```
-
----
-
-**Test Case 3: Update Non-Existent Employee**
-
-**Endpoint:** `{{baseUrl}}/employees/99999`  
-**Method:** PUT or PATCH
-
-Request Body:
-```json
-{
-  "name": "Test"
-}
-```
-
-Postman Tests:
-```javascript
-pm.test("Status code is 404", function () {
-    pm.response.to.have.status(404);
-});
-
-pm.test("Error indicates employee not found", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-});
-```
+3. **Update Non-Existent Employee**
+   - Use invalid employee ID
+   - Verify status code is 404
+   - Verify appropriate error message
 
 ---
 
 #### 2.4 Delete Employee (DELETE)
 
-**Test Case 1: Delete Existing Employee**
+**Test Scenarios:**
 
-**Endpoint:** `{{baseUrl}}/employees/{{employeeId}}`  
-**Method:** DELETE
+1. **Delete Existing Employee**
+   - Endpoint: `/employees/{id}` (DELETE)
+   - Verify status code is 200 or 204
+   - Verify success message if applicable
 
-Postman Tests:
-```javascript
-pm.test("Status code is 200 or 204", function () {
-    pm.expect(pm.response.code).to.be.oneOf([200, 204]);
-});
+2. **Delete Non-Existent Employee**
+   - Use invalid employee ID
+   - Verify status code is 404
+   - Verify error indicates employee not found
 
-pm.test("Success message is returned", function () {
-    if (pm.response.code === 200) {
-        var jsonData = pm.response.json();
-        pm.expect(jsonData).to.have.property('message');
-    }
-});
-```
-
----
-
-**Test Case 2: Delete Non-Existent Employee**
-
-**Endpoint:** `{{baseUrl}}/employees/99999`  
-**Method:** DELETE
-
-Postman Tests:
-```javascript
-pm.test("Status code is 404", function () {
-    pm.response.to.have.status(404);
-});
-
-pm.test("Error indicates not found", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-});
-```
-
----
-
-**Test Case 3: Verify Deletion (GET after DELETE)**
-
-**Endpoint:** `{{baseUrl}}/employees/{{employeeId}}`  
-**Method:** GET
-
-Postman Tests:
-```javascript
-pm.test("Status code is 404", function () {
-    pm.response.to.have.status(404);
-});
-
-pm.test("Employee no longer exists", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-});
-```
+3. **Verify Deletion**
+   - Attempt to GET the deleted employee
+   - Verify status code is 404
+   - Confirm employee no longer exists
 
 ---
 
@@ -368,134 +136,51 @@ pm.test("Employee no longer exists", function () {
 
 #### 3.1 Authentication/Authorization Tests (if applicable)
 
-**Test Case: Access API Without Authentication**
-
-Postman Tests:
-```javascript
-pm.test("Status code is 401 Unauthorized", function () {
-    pm.response.to.have.status(401);
-});
-```
-
----
+- Test API access without authentication token
+- Verify status code is 401 (Unauthorized)
+- Test with invalid authentication credentials
+- Test with expired tokens
 
 #### 3.2 Search and Filter Tests
 
-**Endpoint:** `{{baseUrl}}/employees?department=Engineering`  
-**Method:** GET
-
-Postman Tests:
-```javascript
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
-
-pm.test("All returned employees are from Engineering", function () {
-    var jsonData = pm.response.json();
-    jsonData.forEach(function(employee) {
-        pm.expect(employee.department).to.eql("Engineering");
-    });
-});
-```
-
----
+- Test employee search by department
+- Test employee filtering by various criteria
+- Verify only matching results are returned
+- Validate search query parameters work correctly
 
 #### 3.3 Pagination Tests (if applicable)
 
-**Endpoint:** `{{baseUrl}}/employees?page=1&limit=10`  
-**Method:** GET
-
-Postman Tests:
-```javascript
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
-
-pm.test("Response contains pagination metadata", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('page');
-    pm.expect(jsonData).to.have.property('limit');
-    pm.expect(jsonData).to.have.property('total');
-});
-
-pm.test("Results limited to specified number", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData.data.length).to.be.at.most(10);
-});
-```
-
----
+- Test pagination with page and limit parameters
+- Verify response contains pagination metadata
+- Validate correct number of results per page
+- Test navigation between pages
 
 #### 3.4 Boundary Value Tests
 
-**Test Case: Maximum Field Length**
-
-Request Body:
-```json
-{
-  "name": "A".repeat(256),
-  "email": "test@example.com"
-}
-```
-
-Postman Tests:
-```javascript
-pm.test("Status code is 400", function () {
-    pm.response.to.have.status(400);
-});
-
-pm.test("Error indicates field length exceeded", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData).to.have.property('error');
-});
-```
-
----
+- Test maximum field lengths
+- Test minimum values
+- Test special characters in fields
+- Verify appropriate error handling for boundary violations
 
 #### 3.5 Data Persistence Tests
 
-**Test Case: Verify Data Persistence After Update**
-
-1. Update an employee
-2. Get the employee details
-3. Verify the updated data persists
-
-Postman Tests:
-```javascript
-pm.test("Updated data persists", function () {
-    var jsonData = pm.response.json();
-    pm.expect(jsonData.name).to.eql(pm.environment.get("updatedName"));
-});
-```
+- Create an employee
+- Update the employee
+- Retrieve the employee
+- Verify data persists correctly across operations
 
 ---
 
-### 4. Collection-Level Configuration
+### 4. Test Assertions to Include
 
-#### Pre-request Script (Collection Level)
+For each API test, include assertions for:
 
-```javascript
-// Set timestamp for unique test data
-pm.environment.set("timestamp", Date.now());
-
-// Set content type
-pm.request.headers.add({
-    key: 'Content-Type',
-    value: 'application/json'
-});
-```
-
-#### Test Script (Collection Level)
-
-```javascript
-// Common test for all requests
-pm.test("Response has valid JSON", function () {
-    pm.response.to.be.json;
-});
-
-// Log response time
-console.log("Response time: " + pm.response.responseTime + "ms");
-```
+- **Status Codes:** Verify correct HTTP status codes (200, 201, 400, 404, etc.)
+- **Response Structure:** Validate JSON structure and required fields
+- **Data Types:** Check field data types match expectations
+- **Data Values:** Verify returned values match expected values
+- **Response Time:** Ensure responses are within acceptable time limits
+- **Error Messages:** Validate error messages are clear and appropriate
 
 ---
 
@@ -504,22 +189,19 @@ console.log("Response time: " + pm.response.responseTime + "ms");
 #### Using Postman Collection Runner
 
 1. Open Collection Runner in Postman
-2. Select the "Employee Management CRM API Tests" collection
+2. Select your test collection
 3. Select the environment
-4. Set the number of iterations
-5. Click "Run"
+4. Configure iterations if needed
+5. Click "Run" to execute all tests
+6. Review results and export report
 
 #### Using Newman (CLI)
 
-Install Newman:
-```bash
-npm install -g newman
-```
-
-Run collection:
-```bash
-newman run collection.json -e environment.json --reporters cli,json
-```
+Newman allows running Postman collections from command line:
+1. Install Newman globally via npm
+2. Export your collection and environment
+3. Run collection via Newman command
+4. Generate reports in various formats (CLI, JSON, HTML)
 
 ---
 
@@ -571,8 +253,8 @@ Submit the following for API automation:
 - Test error scenarios
 
 ### Test Independence
-- Each test should be independent
-- Don't rely on specific execution order (when possible)
+- Each test should be independent when possible
+- Don't rely on specific execution order
 - Handle test data setup and cleanup
 - Use pre-request scripts for data preparation
 
@@ -602,7 +284,7 @@ Your API automation will be evaluated on:
 
 - **Test Coverage (30%):** Breadth and depth of test scenarios
 - **Quality of Assertions (25%):** Comprehensive and meaningful validations
-- **Code Organization (20%):** Well-structured and maintainable
+- **Test Organization (20%):** Well-structured and maintainable
 - **Documentation (15%):** Clear descriptions and comments
 - **Error Handling (10%):** Coverage of negative scenarios
 

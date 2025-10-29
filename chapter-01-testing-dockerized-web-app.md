@@ -34,24 +34,19 @@ By completing this assignment, you will demonstrate your ability to:
 #### 1.1 Environment Setup
 
 **Tasks:**
-1. Clone the Employee Management CRM repository:
-   ```bash
-   git clone https://github.com/dreamquality/employee-management-crm.git
-   cd employee-management-crm
-   ```
+1. Clone the Employee Management CRM repository using git clone command
 
 2. Review the project documentation:
    - Read the README.md file
    - Understand the application architecture
    - Identify the technologies used
 
-3. Launch the application using Docker:
-   ```bash
-   docker-compose up -d
-   ```
+3. Launch the application using Docker with docker-compose up command
 
 4. Verify the application is running:
-   - Check Docker containers are up: `docker-compose ps`
+   - Check Docker containers are up using docker-compose ps
+   - Access the web interface (typically at `http://localhost:3000` or as specified)
+   - Verify the API is accessible (typically at `http://localhost:3000/api` or as specified)
    - Access the web interface (typically at `http://localhost:3000` or as specified)
    - Verify the API is accessible (typically at `http://localhost:3000/api` or as specified)
 
@@ -190,54 +185,50 @@ Automated UI testing using Cypress or Playwright to ensure the web interface wor
 
 ## 📦 What to Submit
 
-Organize your submission in the following structure:
+### Submission Process
 
-```
-employee-crm-testing-assignment/
-├── README.md                          # Overview and instructions
-├── 01-setup/
-│   ├── docker-containers.png          # Screenshot of running containers
-│   ├── application-homepage.png       # Screenshot of app homepage
-│   └── setup-notes.md                 # Setup experience notes
-├── 02-api-testing/
-│   ├── postman-collection.json        # Postman collection export
-│   ├── postman-environment.json       # Environment variables
-│   ├── api-test-results.png           # Screenshot of test run
-│   └── api-test-summary.md            # API testing summary
-├── 03-manual-testing/
-│   ├── test-cases.xlsx (or .md)       # Manual test cases
-│   ├── test-execution-report.md       # Execution results
-│   ├── bug-reports.md                 # Bug reports (if any)
-│   └── screenshots/                   # Test execution screenshots
-├── 04-automated-testing/
-│   ├── cypress/ (or playwright/)      # Test automation code
-│   ├── package.json                   # Dependencies
-│   ├── README.md                      # How to run tests
-│   ├── test-results/                  # Test execution results
-│   └── test-recording.mp4             # Optional video
-└── 05-test-report/
-    ├── final-test-report.pdf          # Comprehensive test report
-    └── supporting-documents/          # Additional artifacts
-```
+**Step 1: Fork the Repository**
+
+1. Go to the [Employee Management CRM repository](https://github.com/dreamquality/employee-management-crm)
+2. Click the "Fork" button to create your own copy of the repository
+3. Clone your forked repository to your local machine
+
+**Step 2: Add Your Testing Work**
+
+Add your automation tests and QA documentation to your forked repository:
+
+- **Automated Tests:** Add your test automation code (Cypress, Playwright, or Postman collections)
+  - Create a `tests/` or `e2e/` directory for UI tests
+  - Create an `api-tests/` directory for API test collections
+  - Include setup instructions in the README
+
+- **QA Documentation:** Add your testing documentation
+  - Create a `docs/testing/` directory
+  - Add manual test cases, test plans, and test reports
+  - Include bug reports if defects were found
+  - Add screenshots and evidence of testing
+
+**Step 3: Create a Pull Request**
+
+1. Commit your changes to your forked repository
+2. Push your changes to GitHub
+3. Create a Pull Request (PR) from your fork to the original repository
+4. In the PR description, include:
+   - Summary of testing performed
+   - Test coverage details
+   - Any issues or bugs found
+   - Test execution results
+   - Instructions to run your automated tests
 
 ### Submission Checklist:
 
-- [ ] Docker setup screenshots and notes
-- [ ] Postman collection with API tests
-- [ ] API test execution results
-- [ ] Manual test cases document
-- [ ] Manual test execution report
-- [ ] Automated test code (Cypress or Playwright)
-- [ ] Automated test execution results
-- [ ] Comprehensive final test report
-- [ ] All screenshots and supporting documents
-- [ ] README with instructions to run your tests
-
-### Submission Methods:
-
-1. **GitHub Repository:** Push all artifacts to a public GitHub repository and share the link
-2. **Compressed Archive:** Create a ZIP file with all artifacts
-3. **Google Drive/Dropbox:** Upload all artifacts and share the folder link
+- [ ] Repository forked from employee-management-crm
+- [ ] Automated tests added (API and/or UI)
+- [ ] QA documentation added (test cases, test reports)
+- [ ] All test artifacts committed to your fork
+- [ ] README updated with test execution instructions
+- [ ] Pull Request created with detailed description
+- [ ] Test results and screenshots included in PR description
 
 ---
 
