@@ -39,6 +39,24 @@ Each chapter represents a complete testing assignment with clear objectives, ins
 - API and UI testing best practices
 - Professional test documentation
 
+### [Chapter 2: Setting Up GitHub Actions for Automated Testing](./chapter-02-github-actions-ci-cd.md)
+
+**Focus:** Implementing Continuous Integration (CI) with GitHub Actions for automated test execution
+
+**Skills Covered:**
+- GitHub Actions workflow configuration
+- CI/CD pipeline setup for testing
+- Automated API testing with Newman
+- Automated UI testing with Cypress/Playwright in CI
+- Test reporting and artifact management
+
+**What You'll Learn:**
+- How to set up GitHub Actions workflows
+- Best practices for CI/CD in testing
+- Running tests automatically on code changes
+- Generating and publishing test reports
+- Managing secrets and environment variables
+
 ## 🚀 Getting Started
 
 1. Choose a chapter/assignment

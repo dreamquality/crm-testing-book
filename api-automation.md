@@ -30,105 +30,105 @@ Before starting API automation:
 
 Create a new environment with variables for:
 - Base URL (e.g., `http://localhost:3000/api`)
-- Employee ID (for storing created test data)
-- Test employee data (email, name, etc.)
+- User ID (for storing created test data)
+- Test user data (email, name, etc.)
 
 ---
 
-### 2. Employee CRUD Operations
+### 2. User CRUD Operations
 
-#### 2.1 Create Employee (POST)
+#### 2.1 Create User (POST)
 
 **Test Scenarios:**
 
-1. **Create Employee with Valid Data**
-   - Endpoint: `/employees` (POST)
+1. **Create User with Valid Data**
+   - Endpoint: `/users` (POST)
    - Test status code is 201 (Created)
-   - Verify response contains employee ID
-   - Validate response contains correct employee data
+   - Verify response contains user ID
+   - Validate response contains correct user data
    - Check response time is acceptable (under 500ms)
-   - Store employee ID in environment variable for later use
+   - Store user ID in environment variable for later use
 
-2. **Create Employee with Invalid Data**
+2. **Create User with Invalid Data**
    - Test with empty required fields
    - Test with invalid email format
    - Test with invalid phone format
    - Verify status code is 400 (Bad Request)
    - Verify error message indicates validation failure
 
-3. **Create Employee with Missing Required Fields**
+3. **Create User with Missing Required Fields**
    - Submit request without required fields
    - Verify status code is 400
    - Verify error indicates missing fields
 
 ---
 
-#### 2.2 Read Employee(s) (GET)
+#### 2.2 Read User(s) (GET)
 
 **Test Scenarios:**
 
-1. **Get All Employees**
-   - Endpoint: `/employees` (GET)
+1. **Get All Users**
+   - Endpoint: `/users` (GET)
    - Verify status code is 200
    - Verify response is an array
-   - Check each employee has required properties (id, name, email)
+   - Check each user has required properties (id, name, email)
    - Verify response time is acceptable
 
-2. **Get Single Employee by ID**
-   - Endpoint: `/employees/{id}` (GET)
-   - Use stored employee ID from previous test
+2. **Get Single User by ID**
+   - Endpoint: `/users/{id}` (GET)
+   - Use stored user ID from previous test
    - Verify status code is 200
-   - Verify response contains complete employee details
-   - Validate employee ID matches requested ID
+   - Verify response contains complete user details
+   - Validate user ID matches requested ID
 
-3. **Get Non-Existent Employee**
-   - Use invalid/non-existent employee ID
+3. **Get Non-Existent User**
+   - Use invalid/non-existent user ID
    - Verify status code is 404 (Not Found)
-   - Verify error message indicates employee not found
+   - Verify error message indicates user not found
 
 ---
 
-#### 2.3 Update Employee (PUT/PATCH)
+#### 2.3 Update User (PUT)
 
 **Test Scenarios:**
 
-1. **Update Employee with Valid Data**
-   - Endpoint: `/employees/{id}` (PUT or PATCH)
-   - Modify one or more employee fields
+1. **Update User with Valid Data**
+   - Endpoint: `/users/{id}` (PUT)
+   - Modify one or more user fields
    - Verify status code is 200
    - Verify updated data is returned in response
    - Validate changes are persisted
 
-2. **Update Employee with Invalid Data**
+2. **Update User with Invalid Data**
    - Submit invalid email or phone format
    - Verify status code is 400
    - Verify validation error is returned
 
-3. **Update Non-Existent Employee**
-   - Use invalid employee ID
+3. **Update Non-Existent User**
+   - Use invalid user ID
    - Verify status code is 404
    - Verify appropriate error message
 
 ---
 
-#### 2.4 Delete Employee (DELETE)
+#### 2.4 Delete User (DELETE)
 
 **Test Scenarios:**
 
-1. **Delete Existing Employee**
-   - Endpoint: `/employees/{id}` (DELETE)
+1. **Delete Existing User**
+   - Endpoint: `/users/{id}` (DELETE)
    - Verify status code is 200 or 204
    - Verify success message if applicable
 
-2. **Delete Non-Existent Employee**
-   - Use invalid employee ID
+2. **Delete Non-Existent User**
+   - Use invalid user ID
    - Verify status code is 404
-   - Verify error indicates employee not found
+   - Verify error indicates user not found
 
 3. **Verify Deletion**
-   - Attempt to GET the deleted employee
+   - Attempt to GET the deleted user
    - Verify status code is 404
-   - Confirm employee no longer exists
+   - Confirm user no longer exists
 
 ---
 
@@ -143,8 +143,8 @@ Create a new environment with variables for:
 
 #### 3.2 Search and Filter Tests
 
-- Test employee search by department
-- Test employee filtering by various criteria
+- Test user search by department
+- Test user filtering by various criteria
 - Verify only matching results are returned
 - Validate search query parameters work correctly
 
@@ -164,9 +164,9 @@ Create a new environment with variables for:
 
 #### 3.5 Data Persistence Tests
 
-- Create an employee
-- Update the employee
-- Retrieve the employee
+- Create a user
+- Update the user
+- Retrieve the user
 - Verify data persists correctly across operations
 
 ---
